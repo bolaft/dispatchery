@@ -1,3 +1,12 @@
+# Author: Soufian Salim <soufian.salim@gmail.com>
+
+"""
+Dispatchery allows you to dispatch functions based on complex, parameterized types.
+It provides a decorator to register functions for specific type combinations, including
+nested and generic types. The dispatcher will then call the appropriate function based
+on the types of the arguments passed to it.
+"""
+
 from functools import wraps
 from typing import get_origin, get_args, Any, Callable, Type, Tuple, Dict, Union
 
