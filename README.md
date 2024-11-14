@@ -7,7 +7,7 @@ Unlike `singledispatch`, `dispatchery` can also dispatch based on multiple argum
 
 ## Features
 
-- **Advanced Type Dispatching**: Supports complex and nested generic types.
+- **Advanced Type Dispatching**: Supports complex generic types.
 - **Recursive Type Matching**: Handles nested types like `tuple[int, str, dict[str, int]]`.
 - **Union Types**: Dispatch based on union types like `Union[int, str]`.
 - **Multi Argument Dispatch**: Dispatch based on multiple arguments types, not just the first.
@@ -27,7 +27,7 @@ If you know how to use `functools.singledispatch` then you already know how to u
 
 ### Examples
 
-Suppose we want a function, `process`, that behaves differently based on complex types like `tuple[int, str]`, `list[str]`, or `dict[str, int]`. It also works with nested types like `list[tuple[int, dict[str, float]]]`.
+Suppose we want a function, `process`, that behaves differently based on complex types like `tuple[int, str]`, `list[str]`, or `str | int`, we can use `dispatchery` to achieve this:
 
 ```python
 from dispatchery import dispatchery
