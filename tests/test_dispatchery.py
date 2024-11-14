@@ -4,6 +4,8 @@
 Tests for the dispatchery module.
 """
 
+from typing import Union
+
 from dispatchery import dispatchery
 
 
@@ -59,11 +61,31 @@ def _(value):
 
 @process.register(dict[str, int])
 def _(value):
-    total = sum(value.values())
     return (
-        f"Processing a dictionary with string keys and integer values; total: {total}"
+        "Processing a dictionary with string keys and integer values."
     )
 
+@process.register(bool, str, list[dict])
+def _(value1, value2, value3):
+    return "Processing a bool, a string, and a list of dictionaries"
+
+
+@process.register(bool, str, option=list[int])
+def _(value1, value2, option=[1, 2, 3]):
+    return "Processing a bool, a string, and an optional list of integers"
+
+
+@process.register(bool, str, option=list[dict])
+def _(value1, value2, option=[{"a": 1, "b": 2}]):
+    return "Processing a bool, a string, and an optional list of dictionaries"
+
+@process.register(int, bool | str)
+def _(value1, value2):
+    return "Processing an integer and a boolean or string"
+
+@process.register(int, Union[float, str])
+def _(value1, value2):
+    return "Processing an integer and a float or string"
 
 def test_default():
     assert process(3.14) == "Default processing for float"
@@ -107,5 +129,29 @@ def test_nested_generic_types():
 def test_dictionary_generic_type():
     assert (
         process({"a": 5, "b": 15})
-        == "Processing a dictionary with string keys and integer values; total: 20"
+        == "Processing a dictionary with string keys and integer values."
+    )
+
+def test_multiple_types():
+    assert (
+        process(True, "hello", [{"a": 1, "b": 2}])
+        == "Processing a bool, a string, and a list of dictionaries"
+    )
+
+def test_options():
+    assert (
+        process(True, "hello", option=[{"a": 1, "b": 2}])
+        == "Processing a bool, a string, and an optional list of dictionaries"
+    )
+    assert (
+        process(True, "hello", option=[1, 2, 3])
+        == "Processing a bool, a string, and an optional list of integers"
+    )
+
+def test_union():
+    assert (
+        process(42, True) == "Processing an integer and a boolean or string"
+    )
+    assert (
+        process(42, 3.14) == "Processing an integer and a float or string"
     )
