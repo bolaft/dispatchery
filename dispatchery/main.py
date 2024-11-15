@@ -8,6 +8,7 @@ on the types of the arguments passed to it.
 """
 
 from functools import wraps
+from types import UnionType
 from typing import get_origin, get_args, Any, Callable, Type, Tuple, Dict, Union
 
 
@@ -120,9 +121,9 @@ class Dispatchery:
             bool: True if `value` matches `expected_type`, False otherwise.
         """
         origin_type = get_origin(expected_type)
-        
+
         # Check if expected_type is a Union (including the `|` syntax in Python 3.10+)
-        if origin_type is Union:
+        if origin_type is Union or origin_type is UnionType:
             # Check if value matches any of the types within the Union
             return any(self._check_type_recursively(value, t) for t in get_args(expected_type))
 
