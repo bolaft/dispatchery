@@ -124,7 +124,7 @@ print(process("hello", key=1.618))
 
 - **Better Readability**: Your code is clean and type-specific without bulky `if` statements.
 - **Enhanced Maintainability**: Add new types easily without modifying existing code.
-- **More Pythonic**: Embrace the power of Python’s dynamic typing with elegant dispatching.
+- **More Flexible**: Embrace the power of Python’s dynamic typing with elegant dispatching.
 
 ## Dependencies
 
