@@ -21,6 +21,8 @@ class Dispatchery:
     Attributes:
         default_func (Callable): The default function to call if no specific type matches.
         registry (dict): A dictionary mapping types to their registered functions.
+        quick_registry (dict): A dictionary mapping simple types to their registered functions.
+        strict (bool): Whether to check every dict and list element for type checking or just the first one.
     """
 
     def __init__(self, func: Callable, strict: bool):
@@ -154,12 +156,12 @@ class Dispatchery:
         for _, k, v in sorted_tuples:
             self.registry[k] = v
 
-    def _calculate_composite_specificity(self, key):
+    def _calculate_composite_specificity(self, key: Tuple[Tuple[Type], Dict[str, Type]]):
         """
         Calculate the composite specificity of a key for sorting.
 
         Args:
-            key: The key to calculate the specificity for.
+            key (Tuple[Tuple[Type], Dict[str, Type]]): The key to calculate the specificity for.
 
         Returns:
             Tuple[int, int, int]: A tuple containing the max specificity, sum specificity, and negative wildcard count.
@@ -207,9 +209,15 @@ class Dispatchery:
         else:
             return 0
 
-    def _is_unparameterized_generic(self, type_):
+    def _is_unparameterized_generic(self, type_: Type) -> bool:
         """
         Determine if a type is an unparameterized generic (used for sorting registry only).
+
+        Args:
+            type_ (Type): The type to check.
+
+        Returns:
+            bool: True if the type is an unparameterized generic, False otherwise.
         """
         origin = get_origin(type_)
         args = get_args(type_)
