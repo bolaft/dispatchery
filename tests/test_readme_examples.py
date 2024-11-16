@@ -98,3 +98,29 @@ def test_decorator_parameters_example():
 
     assert process(42, "hello") == 1
     assert process("hello", 42) == 2
+
+
+def test_classes_example():
+    class MyClass:
+        @dispatchery
+        def my_method(self, value1):
+            return "default"
+        
+        @my_method.register(list)
+        def _(self, value1):
+            return "list"
+
+        @my_method.register(list[int])
+        def _(self, value1):
+            return "list[int]"
+        
+        @my_method.register(list[str])
+        def _(self, value1):
+            return "list[str]"
+
+    obj = MyClass()
+
+    assert obj.my_method(42) == "default"
+    assert obj.my_method([True, False]) == "list"
+    assert obj.my_method([1, 2, 3]) == "list[int]"
+    assert obj.my_method(["a", "b", "c"]) == "list[str]"

@@ -9,9 +9,10 @@ on the types of the arguments passed to it.
 
 import inspect
 
-from functools import wraps
+from functools import wraps, partial
 from types import FunctionType, BuiltinFunctionType, MethodType, UnionType
 from typing import get_origin, get_args, Any, Callable, Type, Tuple, Dict, Union
+from inspect import signature, Parameter
 
 
 class Dispatchery:
@@ -33,6 +34,9 @@ class Dispatchery:
             func (Callable): The default function to use when no matching type is registered.
             strict (bool): Whether to check every dict and list element for type checking or just the first one.
         """
+        self.is_method = (
+            len(signature(func).parameters) > 0 and "self" in signature(func).parameters
+        )
         self.default_func = func
         self.registry = {}
         self.quick_registry = {}
@@ -156,7 +160,9 @@ class Dispatchery:
         for _, k, v in sorted_tuples:
             self.registry[k] = v
 
-    def _calculate_composite_specificity(self, key: Tuple[Tuple[Type], Dict[str, Type]]):
+    def _calculate_composite_specificity(
+        self, key: Tuple[Tuple[Type], Dict[str, Type]]
+    ):
         """
         Calculate the composite specificity of a key for sorting.
 
@@ -240,6 +246,9 @@ class Dispatchery:
             Callable: The function that matches the types of `args` and `kwargs`, or the
             default function if no match is found.
         """
+        if self.is_method:
+            args = args[1:]
+
         arg_types = tuple(map(type, args))
 
         if kwargs:
@@ -414,6 +423,16 @@ class Dispatchery:
         func = self.dispatch(*args, **kwargs)
 
         return func(*args, **kwargs)
+
+    def __get__(self, instance, owner):
+        """
+        Support instance methods by returning a bound method.
+        """
+        if instance is None:
+            # Accessed through the class
+            return self
+        # Return a bound method
+        return partial(self.__call__, instance)
 
 
 class CachedDispatchery(Dispatchery):

@@ -11,6 +11,7 @@ Unlike `singledispatch`, `dispatchery` can also dispatch based on multiple argum
 - **Recursive Type Matching**: Handles nested types like `tuple[int, str, dict[str, int]]`.
 - **Union Types**: Dispatch based on union types like `Union[int, str]`.
 - **Multi Argument Dispatch**: Dispatch based on multiple arguments types, not just the first.
+- **Method Overloading**: Works with object methods just the same.
 - **Simple Integration**: Works just like `functools.singledispatch` with added power.
 
 ## Installation
@@ -107,6 +108,40 @@ print(process("hello", key=1987))  # "Round number."
 print(process("hello", key=1.618))  # "Decimals."
 ```
 
+### Method Overloading
+
+Working with classes is just as easy:
+
+```python
+from dispatchery import dispatchery
+
+
+class MyClass:
+    @dispatchery
+    def my_method(self, value1):
+        return "default"
+
+    @my_method.register(list)
+    def _(self, value1):
+        return "list"
+
+    @my_method.register(list[int])
+    def _(self, value1):
+        return "list[int]"
+
+    @my_method.register(list[str])
+    def _(self, value1):
+        return "list[str]"
+
+
+obj = MyClass()
+
+print(obj.my_method(42))  # "default"
+print(obj.my_method([1, "a", 2, "b", 3, "c"]))  # "list"
+print(obj.my_method([1, 2, 3]))  # "list[int]"
+print(obj.my_method(["a", "b", "c"]))  # "list[str]"
+```
+
 ### Types as Decorator Parameters
 
 You can also pass types as arguments to the decorator instead of using type hints:
@@ -151,7 +186,7 @@ from dispatchery import dispatchery
 dispatchery.cached_mode = True
 ```
 
-For most use cases the overhead from the cache is larger than the gains, so it's generally not worth it. But if you need to do a lot of dispatching per second with recurring complex types, it can potentially speedup `dispatchery` significantly.
+gFor most use cases the overhead from the cache is larger than the gains, so it's generally not worth it. But if you need to do a lot of dispatching per second with recurring complex types, it can potentially speedup `dispatchery` significantly.
 
 ## Dependencies
 
