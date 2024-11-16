@@ -141,7 +141,7 @@ from dispatchery import dispatchery
 dispatchery.strict_mode = False
 ```
 
-This will massively speedup execution for long values, but only the first value will be used for type matching.
+This will massively speedup execution for long values, but only the first item in the list will be used for type matching.
 
 Moreover `dispatchery` has a built-in cache that stores the type matching results. This cache is disabled by default, but you can enable it by setting the `cached_mode` attribute to `True`:
 
