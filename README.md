@@ -186,7 +186,7 @@ from dispatchery import dispatchery
 dispatchery.cached_mode = True
 ```
 
-gFor most use cases the overhead from the cache is larger than the gains, so it's generally not worth it. But if you need to do a lot of dispatching per second with recurring complex types, it can potentially speedup `dispatchery` significantly.
+For most use cases the overhead from the cache is larger than the gains, so it's generally not worth it. But if you need to do a lot of dispatching per second with recurring complex types, it can potentially speedup `dispatchery` significantly.
 
 ## Dependencies
 
