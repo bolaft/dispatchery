@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="dispatchery",
-    version="0.2.1",
+    version="0.3.0",
     description="A Python package for advanced function dispatching based on complex, nested, and parameterized types. Inspired by singledispatch.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",

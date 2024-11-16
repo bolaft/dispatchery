@@ -4,6 +4,11 @@
 Dispatchery package.
 """
 
-__version__ = "0.2.1"
+from importlib.metadata import version, PackageNotFoundError
 
 from .main import dispatchery
+
+try:
+    __version__ = version("dispatchery")
+except PackageNotFoundError:
+    __version__ = "unknown"
