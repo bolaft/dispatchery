@@ -549,7 +549,7 @@ class TypeMatchCache:
         self.cache[hashable_args] = value
 
 
-def dispatchery(func: Callable, none_is_valid=True) -> Callable:
+def dispatchery(func: Callable) -> Callable:
     """
     A decorator function that creates a Dispatchery instance for a given function.
 
