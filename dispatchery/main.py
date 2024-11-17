@@ -144,7 +144,6 @@ class Dispatchery:
         """
         Sort the registry based on the specificity of the types.
         """
-        # Sort the registry based on the specificity of the types
         # Avoid situations where a list[int] matches with list when list is registered first
         # List all tuples with their specificity
         tuples = [
@@ -331,7 +330,7 @@ class Dispatchery:
         """
         origin_type = get_origin(expected_type)
 
-        # If there's no origin type, expected_type is a simple (non-parameterized) type.
+        # If there's no origin type, expected_type is a simple (non-parameterized) type
         if origin_type is None:
             return (
                 type(value) is expected_type
@@ -499,7 +498,7 @@ class TypeMatchCache:
     types, including nested and parameterized types, by converting them into hashable keys.
 
     Attributes:
-        cache (Dict): A dictionary to store type match results based on the hashable keys of the arguments
+        cache (Dict): A dictionary to store type match results based on the hashable keys of the arguments.
     """
 
     def __init__(self):

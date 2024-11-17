@@ -118,7 +118,6 @@ def test_classes_example():
         def _(self, value1: list[str]):
             return "list[str]"
 
-
     obj = MyClass()
 
     assert obj.my_method(42) == "default"

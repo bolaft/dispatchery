@@ -80,7 +80,7 @@ def _(a: int, b: str):
 
 @process.register
 def _(a: str, b: int):
-    return "Boppity boop."
+    return "Boppity bop."
 
 print(process(42, "hello"))  # "Beep boop."
 print(process("hello", 42))  # "Boppity bop."
