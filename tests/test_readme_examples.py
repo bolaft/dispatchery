@@ -56,14 +56,14 @@ def test_multi_arg_example():
 
     @process.register
     def _(a: int, b: str):
-        return "Bip boop."
+        return "Beep boop."
 
     @process.register
     def _(a: str, b: int):
-        return "Boopidy bop."
+        return "Boppity bop."
 
-    assert process(42, "hello") == "Bip boop."
-    assert process("hello", 42) == "Boopidy bop."
+    assert process(42, "hello") == "Beep boop."
+    assert process("hello", 42) == "Boppity bop."
 
 
 def test_kwarg_example():

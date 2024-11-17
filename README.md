@@ -76,15 +76,14 @@ def process(a, b):
 
 @process.register
 def _(a: int, b: str):
-    return "Bip boop."
+    return "Beep boop."
 
 @process.register
 def _(a: str, b: int):
-    return "Boopidy bop."
+    return "Boppity boop."
 
-print(process(42, "hello"))  # "Bip boop."
-
-print(process("hello", 42))  # "Boopidy bop."
+print(process(42, "hello"))  # "Beep boop."
+print(process("hello", 42))  # "Boppity bop."
 ```
 
 ### Keyword Arguments

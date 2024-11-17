@@ -12,93 +12,93 @@ from dispatchery import dispatchery
 def test_simple_types():
     @dispatchery
     def func(value):
-        return "default"
+        return 0
 
-    assert func(42) == "default"
+    assert func(42) == 0
 
     @func.register(int)
     def _(value):
-        return "int"
+        return 1
 
     @func.register(str)
     def _(value):
-        return "str"
+        return 2
 
     @func.register(list)
     def _(value):
-        return "list"
+        return 3
 
-    assert func(42) == "int"
-    assert func("hello") == "str"
-    assert func([1, 2, 3]) == "list"
-    assert func(3.14) == "default"
+    assert func(3.14) == 0
+    assert func(42) == 1
+    assert func("hello") == 2
+    assert func([1, 2, 3]) == 3
 
 
 def test_typing_types():
     @dispatchery
     def func(value):
-        return "default"
+        return 0
 
     @func.register(List[int])
     def _(value):
-        return "List[int]"
+        return 1
 
     @func.register(List[str])
     def _(value):
-        return "List[str]"
+        return 2
 
     @func.register(Dict[str, int])
     def _(value):
-        return "Dict[str, int]"
+        return 3
 
     @func.register(Tuple[int, str])
     def _(value):
-        return "Tuple[int, str]"
+        return 4
 
-    assert func([1, 2, 3]) == "List[int]"
-    assert func(["a", "b", "c"]) == "List[str]"
-    assert func({"a": 1, "b": 2}) == "Dict[str, int]"
-    assert func((42, "example")) == "Tuple[int, str]"
-    assert func(3.14) == "default"
+    assert func(3.14) == 0
+    assert func([1, 2, 3]) == 1
+    assert func(["a", "b", "c"]) == 2
+    assert func({"a": 1, "b": 2}) == 3
+    assert func((42, "example")) == 4
 
 
 def test_union_types():
     @dispatchery
     def func(value):
-        return "default"
+        return 0
 
     @func.register(int | str)
     def _(value):
-        return "int | str"
+        return 1
 
     @func.register(bool | float)
     def _(value):
-        return "bool | float"
+        return 2
 
-    assert func(42) == "int | str"
-    assert func("hello") == "int | str"
-    assert func(True) == "bool | float"
-    assert func(3.14) == "bool | float"
-    assert func([1, 2, 3]) == "default"
+    assert func([1, 2, 3]) == 0
+    assert func(42) == 1
+    assert func("hello") == 1
+    assert func(True) == 2
+    assert func(3.14) == 2
 
 
 def test_optional_types():
     @dispatchery
     def func(value):
-        return "default"
+        return 0
 
     @func.register(Union[int, str])
     def _(value):
-        return "Union[int, str]"
+        return 1
 
     @func.register(Union[bool, float])
     def _(value):
-        return "Union[bool, float]"
+        return 2
 
-    assert func(42) == "Union[int, str]"
-    assert func("hello") == "Union[int, str]"
-    assert func(True) == "Union[bool, float]"
-    assert func(3.14) == "Union[bool, float]"
+    assert func(42) == 1
+    assert func("hello") == 1
+    assert func(True) == 2
+    assert func(3.14) == 2
 
 
 def test_classes():
@@ -107,137 +107,137 @@ def test_classes():
 
     @dispatchery
     def func(value):
-        return "default"
+        return 0
 
     @func.register(Dummy)
     def _(value):
-        return "Dummy"
+        return 1
 
     @func.register(Tuple[float, Dummy])
     def _(value):
-        return "Tuple[float, Dummy]"
+        return 2
 
-    assert func(Dummy()) == "Dummy"
-    assert func((1.5, Dummy())) == "Tuple[float, Dummy]"
-    assert func(Dummy) == "default"
-    assert func(42) == "default"
+    assert func(Dummy) == 0
+    assert func(42) == 0
+    assert func(Dummy()) == 1
+    assert func((1.5, Dummy())) == 2
 
 
 def test_parameterized_types():
     @dispatchery
     def func(value):
-        return "default"
+        return 0
 
     @func.register(list)
     def _(value):
-        return "List"
+        return 1
 
     @func.register(list[str])
     def _(value):
-        return "List[str]"
+        return 2
 
     @func.register(list[int])
     def _(value):
-        return "List[int]"
+        return 3
 
-    assert func([1, 2, 3]) == "List[int]"
-    assert func(["a", "b", "c"]) == "List[str]"
-    assert func([1.5, 2.5, 3.5]) == "List"
-    assert func(42) == "default"
+    assert func(42) == 0
+    assert func([1.5, 2.5, 3.5]) == 1
+    assert func(["a", "b", "c"]) == 2
+    assert func([1, 2, 3]) == 3
 
 
 def test_nested_types():
     @dispatchery
     def func(value):
-        return "default"
+        return 0
 
     @func.register(tuple[int, str])
     def _(value):
-        return "Tuple[int, str]"
+        return 1
 
     @func.register(tuple[int, list[str]])
     def _(value):
-        return "Tuple[int, List[str]]"
+        return 2
 
-    @func.register(tuple[bool, Dict[str, int]])
+    @func.register(tuple[bool, dict[str, int]])
     def _(value):
-        return "Tuple[bool, Dict[str, int]]"
+        return 3
 
-    assert func((42, "example")) == "Tuple[int, str]"
-    assert func((7, ["one", "two", "three"])) == "Tuple[int, List[str]]"
-    assert func((True, {"a": 1, "b": 2})) == "Tuple[bool, Dict[str, int]]"
-    assert func(3.14) == "default"
+    assert func(3.14) == 0
+    assert func((42, "example")) == 1
+    assert func((7, ["one", "two", "three"])) == 2
+    assert func((True, {"a": 1, "b": 2})) == 3
 
 
 def test_generic_types():
     @dispatchery
     def func(value):
-        return "default"
+        return 0
 
     @func.register(List)
     def _(value):
-        return "List"
+        return 1
 
     @func.register(List[str])
     def _(value):
-        return "List[str]"
+        return 2
 
     @func.register(List[int])
     def _(value):
-        return "List[int]"
+        return 3
 
     @func.register(Dict)
     def _(value):
-        return "Dict"
+        return 4
 
     @func.register(Tuple)
     def _(value):
-        return "Tuple"
+        return 5
 
-    assert func(["a", "b", "c"]) == "List[str]"
-    assert func([1, 2, 3]) == "List[int]"
-    assert func([1.5, 2.5, 3.5]) == "List"
-    assert func({"a": 1, "b": 2}) == "Dict"
-    assert func((42, "example")) == "Tuple"
-    assert func(42) == "default"
+    assert func(42) == 0
+    assert func([1.5, 2.5, 3.5]) == 1
+    assert func(["a", "b", "c"]) == 2
+    assert func([1, 2, 3]) == 3
+    assert func({"a": 1, "b": 2}) == 4
+    assert func((42, "example")) == 5
 
 
 def test_multiple_arguments():
     @dispatchery
     def func(value1, value2):
-        return "default"
+        return 0
 
     @func.register(int, str)
     def _(value1, value2):
-        return "int, str"
+        return 1
 
     @func.register(bool, float)
     def _(value1, value2):
-        return "bool, float"
+        return 2
 
-    assert func(42, "hello") == "int, str"
-    assert func(True, 3.14) == "bool, float"
-    assert func(42, 3.14) == "default"
-    assert func(True, "hello") == "default"
+    assert func(42, 3.14) == 0
+    assert func(True, "hello") == 0
+    assert func(42, "hello") == 1
+    assert func(True, 3.14) == 2
 
 
 def test_optional_arguments():
     @dispatchery
     def func(value1, value2, option=None):
-        return "default"
+        return 0
 
     @func.register(bool, float, option=str)
     def _(value1, value2, option=None):
-        return "bool, float, option=str"
+        return 1
 
     @func.register(int, str, option=int)
     def _(value1, value2, option=None):
-        return "int, str, option=int"
+        return 2
 
-    assert func(True, "hello") == "default"
-    assert func(True, 3.14, option="hello") == "bool, float, option=str"
-    assert func(42, "hello", option=42) == "int, str, option=int"
-    assert func(42, "hello", option=False) == "default"
+    assert func(True, "hello") == 0
+    assert func(42, "hello", option=False) == 0
+    assert func(True, 3.14, option="hello") == 1
+    assert func(42, "hello", option=42) == 2
 
 
 def test_strict_mode():
@@ -245,41 +245,39 @@ def test_strict_mode():
 
     @dispatchery
     def strict_func(value):
-        return "default"
+        return 0
 
     @strict_func.register(list[int])
     def _(value):
-        return "list[int]"
+        return 1
 
     @strict_func.register(list[str])
     def _(value):
-        return "list[str]"
+        return 2
 
-    assert strict_func([1, 2, 3]) == "list[int]"
-    assert strict_func(["a", "b", "c"]) == "list[str]"
-
-    assert strict_func([1, None, None]) == "default"
-    assert strict_func(["a", None, None]) == "default"
+    assert strict_func(["a", None, None]) == 0
+    assert strict_func([1, None, None]) == 0
+    assert strict_func([1, 2, 3]) == 1
+    assert strict_func(["a", "b", "c"]) == 2
 
     dispatchery.strict_mode = False
 
     @dispatchery
     def lenient_func(value):
-        return "default"
+        return 0
 
     @lenient_func.register(list[int])
     def _(value):
-        return "list[int]"
+        return 1
 
     @lenient_func.register(list[str])
     def _(value):
-        return "list[str]"
+        return 2
 
-    assert lenient_func([1, 2, 3]) == "list[int]"
-    assert lenient_func(["a", "b", "c"]) == "list[str]"
-
-    assert lenient_func([1, None, None]) == "list[int]"
-    assert lenient_func(["a", None, None]) == "list[str]"
+    assert lenient_func([1, 2, 3]) == 1
+    assert lenient_func([1, None, None]) == 1
+    assert lenient_func(["a", "b", "c"]) == 2
+    assert lenient_func(["a", None, None]) == 2
 
 
 def test_cached_mode():
@@ -287,24 +285,24 @@ def test_cached_mode():
 
     @dispatchery
     def cached_func(value):
-        return "default"
+        return 0
 
     @cached_func.register(int)
     def _(value):
-        return "int"
+        return 1
 
-    assert cached_func("hello") == "default"
-    assert cached_func(10) == "int"
+    assert cached_func("hello") == 0
+    assert cached_func(10) == 1
 
     dispatchery.cache_mode = False
 
     @dispatchery
     def uncached_func(value):
-        return "default"
+        return 0
 
     @uncached_func.register(int)
     def _(value):
-        return "int"
+        return 1
 
-    assert uncached_func("hello") == "default"
-    assert uncached_func(10) == "int"
+    assert uncached_func("hello") == 0
+    assert uncached_func(10) == 1
