@@ -227,7 +227,7 @@ def test_optional_arguments():
         return "default"
 
     @func.register
-    def _(value1: bool, value2: int, optionp=None):
+    def _(value1: bool, value2: int, option=None):
         return "bool, int, option=str"
 
     @func.register

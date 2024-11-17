@@ -121,16 +121,16 @@ class MyClass:
     def my_method(self, value1):
         return "default"
 
-    @my_method.register(list)
-    def _(self, value1):
+    @my_method.register
+    def _(self, value1: list):
         return "list"
 
-    @my_method.register(list[int])
-    def _(self, value1):
+    @my_method.register
+    def _(self, value1: list[int]):
         return "list[int]"
 
-    @my_method.register(list[str])
-    def _(self, value1):
+    @my_method.register
+    def _(self, value1: list[str]):
         return "list[str]"
 
 
