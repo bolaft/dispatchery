@@ -12,7 +12,7 @@ import inspect
 from functools import wraps, partial
 from types import FunctionType, BuiltinFunctionType, MethodType, UnionType
 from typing import get_origin, get_args, Any, Callable, Type, Tuple, Dict, Union
-from inspect import signature, Parameter
+from inspect import signature
 
 
 class Dispatchery:
@@ -328,6 +328,9 @@ class Dispatchery:
         Returns:
             bool: True if `value` matches `expected_type`, False otherwise.
         """
+        if expected_type is Any:
+            return True
+
         origin_type = get_origin(expected_type)
 
         # If there's no origin type, expected_type is a simple (non-parameterized) type
