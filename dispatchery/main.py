@@ -268,9 +268,19 @@ class Dispatchery:
             registered_arg_types,
             registered_kwarg_types,
         ), func in self.registry.items():
+            matches = []
+
             if self._types_match(
                 args, kwargs, registered_arg_types, dict(registered_kwarg_types)
             ):
+                matches.append(
+                    ((registered_arg_types, dict(registered_kwarg_types)), func)
+                )
+
+            if matches:
+                for params, func in matches:
+                    pass  # FIXME, need to pick the most appropriate one
+
                 return func
 
         # 3. Default function
@@ -298,20 +308,20 @@ class Dispatchery:
         # Check if positional arguments match
         if len(args) != len(expected_arg_types):
             return False
-        if not all(
-            self._check_type_recursively(arg, expected)
-            for arg, expected in zip(args, expected_arg_types)
-        ):
-            return False
+
+        for arg, expected in zip(args, expected_arg_types):
+            if not self._check_type_recursively(arg, expected):
+                return False
 
         # Check if keyword arguments match
         if set(kwargs.keys()) != set(expected_kwarg_types.keys()):
             return False
 
-        return all(
-            self._check_type_recursively(kwargs[k], expected_type)
-            for k, expected_type in expected_kwarg_types.items()
-        )
+        for k, expected_type in expected_kwarg_types.items():
+            if not self._check_type_recursively(kwargs[k], expected_type):
+                return False
+
+        return True
 
     def _check_type_recursively(self, value: Any, expected_type: Type) -> bool:
         """
@@ -404,6 +414,22 @@ class Dispatchery:
                     ) and self._check_type_recursively(first_value, value_type)
                 else:
                     return False
+
+        # Handle types passed as values
+        elif get_origin(expected_type) is not None or isinstance(value, type):
+            args = get_args(expected_type)
+
+            if args and len(args) == 1:
+                try:
+                    if issubclass(value, args[0]):
+                        return True
+                except TypeError:
+                    pass
+
+            if value == expected_type or type[value] == expected_type:
+                return True
+            else:
+                return False
 
         # Fallback to regular isinstance check for non-container types
         return isinstance(value, expected_type)
